@@ -1,23 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
-
+import Login from './ProyectLogin/Login.jsx';
+import Menu from './ProyectMenu/Menu.jsx';
+import Inicio from './Inicio/Inicio.jsx';
+import { React, useState, useEffect } from 'react';
+import { Routes, Route, } from "react-router-dom";
+import { InstantSearch, SearchBox } from 'react-instantsearch/dom'
 function App() {
+  const [correos, setCorreo] = useState([])
+
+  useEffect(() => {
+    fetch('https://fakestoreapi.com/users')
+      .then(response => response.json())
+      .then(data => {
+        var user = []
+        for (let j = 0; j < data.length; j = j + 1) {
+          user.push({ email: data[j].email, password: data[j].password })
+          setCorreo(user)
+
+        }
+      });
+
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="Login">
+        <Routes>
+          <Route path="/" element={<Inicio />} />
+          <Route path="/login" element={<Login setCorreo={setCorreo} correos={correos} />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="*" element={<p>ERROR 404</p>} />
+        </Routes>
+      </div>
     </div>
   );
 }
