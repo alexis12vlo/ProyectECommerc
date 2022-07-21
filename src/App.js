@@ -4,7 +4,7 @@ import Menu from './ProyectMenu/Menu.jsx';
 import Inicio from './Inicio/Inicio.jsx';
 import { React, useState, useEffect } from 'react';
 import { Routes, Route, } from "react-router-dom";
-import { InstantSearch, SearchBox } from 'react-instantsearch/dom'
+
 function App() {
   const [correos, setCorreo] = useState([])
 

@@ -16,10 +16,12 @@ function CardCarrito({ setBotonCompra, botoncompra, total, setTotal, productocar
         } else {
             setBotonCompra('Completar Compra')
 
+
+
         }
 
 
-    }, [total]);
+    }, [cantidad]);
 
     // Actualiza el título del documento usando la API del navegador
 
@@ -43,6 +45,7 @@ function CardCarrito({ setBotonCompra, botoncompra, total, setTotal, productocar
 
             if (productocarrito.length != 0) {
                 setTotal(total - product.price)
+                setProductoCarrito(productocarrito)
                 setBotonCompra('Completar Compra')
 
                 setCantidad(cantidad - 1)

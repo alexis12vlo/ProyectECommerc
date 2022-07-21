@@ -19,7 +19,6 @@ function Nav({ total, setTotal, productocarrito, setProductoCarrito }) {
         } else {
             setBox('none')
         }
-        console.log(window.scrollY)
     });
 
 
@@ -61,13 +60,6 @@ function Nav({ total, setTotal, productocarrito, setProductoCarrito }) {
                         <h3>Sobre Nosotros</h3>
                         <h3>Sustentabilidad</h3>
                     </div>
-
-
-
-
-
-
-
                     <div className="NavCategoriasLogo">
                         <div className="NavCategoriasLogoImage">
 

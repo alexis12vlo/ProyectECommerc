@@ -4,28 +4,16 @@ import { AiTwotoneStar } from 'react-icons/ai'
 import {
     Button, UncontrolledPopover, PopoverHeader, PopoverBody
 } from 'reactstrap';
-var suma = 0
 function MenuElementsCard({ total, setTotal, productocarrito, setProductoCarrito, producto }) {
     const [opacity, setOpacity] = useState(0)
-    useEffect(() => {
-        // Actualiza el título del documento usando la API del navegador
 
-        if (productocarrito.length != 0) {
-            console.log(productocarrito)
-            var suma = 0
-            productocarrito.map((user) => { suma = suma + user.price })
-            setTotal(suma)
-        }
-
-
-    }, [productocarrito]);
 
     function Agregar() {
         if (productocarrito.includes(producto) == false) {
 
 
             setProductoCarrito([...productocarrito, producto])
-            console.log(productocarrito)
+            setTotal(total + producto.price)
 
 
         }
