@@ -1,37 +1,59 @@
 import './MenuElementsCard.scss';
 import { React, useState, useEffect } from 'react';
 import { AiTwotoneStar } from 'react-icons/ai'
+import { BsFillCartPlusFill } from 'react-icons/bs'
+import { BiMessageSquareAdd } from 'react-icons/bi'
+import { Link } from "react-router-dom";
+
 import {
     Button, UncontrolledPopover, PopoverHeader, PopoverBody
 } from 'reactstrap';
-function MenuElementsCard({ total, setTotal, productocarrito, setProductoCarrito, producto }) {
+function MenuElementsCard({ mostrarinfo, setMostrarInfo, productoInfo, setProductoInfo, total, setTotal, productocarrito, setProductoCarrito, producto }) {
     const [opacity, setOpacity] = useState(0)
 
-
     function Agregar() {
-        if (productocarrito.includes(producto) == false) {
-
-
+        var verdad = ''
+        if (productocarrito.length == 0) {
             setProductoCarrito([...productocarrito, producto])
             setTotal(total + producto.price)
+        } else {
+            var k = 0;
+            for (let i = 0; i < productocarrito.length; i++) {
+                if (productocarrito[i].id == producto.id) {
+                    k = 1
+                    i = productocarrito.length
+                }
+
+            }
+            if (k == 0) {
+                setProductoCarrito([...productocarrito, producto])
+                setTotal(total + producto.price)
+            }
+
+        }
+    }
+
+    function MostrarInfo() {
+        setProductoInfo(producto)
+        console.log(producto)
+        const Efecto = () => {
+
+            setMostrarInfo(true)
 
 
         }
-
-
-
+        Efecto()
     }
     return (
 
         <div className="MenuElementsCardContainer">
             <div style={{ backgroundImage: `url(${producto.image})` }} className="MenuElementsCardContainerImage">
                 <div className="MenuElementsCardContainerImageContainer">
-                    <div style={{ opacity: opacity }} className="MenuElementsCardContainerImageInfo">
-                        {producto.description}
-                    </div>
-                    <button id="Info" onClick={() => { setOpacity(opacity == 0 ? 1 : 0) }}>Mas Info</button>
+                    <button onClick={Agregar} ><BsFillCartPlusFill /></button>
 
-                    <button onClick={Agregar} >Agregar a Carrito</button>
+                    <button id="Info" onClick={MostrarInfo}><BiMessageSquareAdd /></button>
+
+
                 </div>
             </div>
             <div className="MenuElementsCardContainerDescription">
@@ -57,7 +79,7 @@ function MenuElementsCard({ total, setTotal, productocarrito, setProductoCarrito
                         <div className="MenuElementsCardContainerDescriptionContainerRewies">
                             <div className="MenuElementsCardContainerDescriptionContainerRewiesContainer">
 
-                                <p>{producto.rating.count} Reviews</p>
+                                <p>{producto.rating.count} Stocks</p>
 
                             </div>
                         </div>

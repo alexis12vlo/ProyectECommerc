@@ -8,7 +8,7 @@ function Inicio() {
         function Click() {
             document.getElementById('LinkLogin').click();
         }
-        setTimeout(Click, 2500)
+        setTimeout(Click, 1000)
 
     }, []);
 

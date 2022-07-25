@@ -4,6 +4,7 @@ import { ImCart } from 'react-icons/im'
 import { FaAngleLeft, FaHospitalAlt } from 'react-icons/fa'
 import { React, useState, useEffect, Component } from 'react';
 import { Offcanvas, OffcanvasHeader, OffcanvasBody } from 'reactstrap';
+import { auth } from '../../../firebase.js'
 
 
 
@@ -11,6 +12,16 @@ import { Offcanvas, OffcanvasHeader, OffcanvasBody } from 'reactstrap';
 function Nav({ total, setTotal, productocarrito, setProductoCarrito }) {
     const [open, setOpen] = useState(false)
     const [box, setBox] = useState('none')
+    const user = auth.currentUser
+    var Usuario = ''
+    if (user != null) {
+        Usuario = user.auth.currentUser.displayName;
+
+    } else {
+        Usuario = 'Bienvenido'
+    }
+    const [nameusuario, setNameusuario] = useState(Usuario);
+
 
     const [botoncompra, setBotonCompra] = useState('Agrege un Producto')
     window.addEventListener('scroll', (event) => {
@@ -45,7 +56,7 @@ function Nav({ total, setTotal, productocarrito, setProductoCarrito }) {
                     <div className='CarritoTotalContainer'>
                         <div className='CarritoTotalContainerPrecio'>
                             <p>Total</p>
-                            <h4>${total}</h4>
+                            <h4>${Math.round(total)}</h4>
                         </div>
                         <div className='CarritoTotalContainerButton'>
                             <button>{botoncompra}</button>
@@ -74,7 +85,7 @@ function Nav({ total, setTotal, productocarrito, setProductoCarrito }) {
                             <h3>Carrito</h3>
                         </div>
                         <div className="NavCategoriasCarContainerLogin">
-                            <h3>Mi Cuenta</h3>
+                            <h3>{nameusuario}</h3>
                         </div>
                     </div>
                 </div>

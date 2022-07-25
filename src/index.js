@@ -10,6 +10,8 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+// Import the functions you need from the SDKs you need
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 

@@ -19,6 +19,7 @@ function CardCarrito({ setBotonCompra, botoncompra, total, setTotal, productocar
 
 
         }
+        setCantidad(cantidad)
 
 
     }, [cantidad]);
@@ -27,8 +28,8 @@ function CardCarrito({ setBotonCompra, botoncompra, total, setTotal, productocar
 
     function Eliminar() {
         setProductoCarrito(productocarrito.filter((filter) => filter != product))
-        setTotal(0)
         setBotonCompra('Agrege un Producto')
+        setTotal(total - product.price * cantidad)
 
     }
     function Sumar() {
@@ -53,7 +54,6 @@ function CardCarrito({ setBotonCompra, botoncompra, total, setTotal, productocar
         }
     }
     return (
-
         <div className="CardCarrito">
             <div className="CardCarritoContainer">
                 <div className="CardCarritoContainerImage">
@@ -96,8 +96,8 @@ function CardCarrito({ setBotonCompra, botoncompra, total, setTotal, productocar
                         <BsTrash />
                     </div>
                     <div className="CardCarritoContainerEliminarContainerNumber">
-                        <h4>${product.price}</h4>
-                        <h5>${product.price + (product.price * 20 / 100)}</h5>
+                        <h4>${Math.round(product.price)}</h4>
+                        <h5>${Math.round(product.price) + Math.round(product.price * 20 / 100)}</h5>
                     </div>
                 </div>
             </div>

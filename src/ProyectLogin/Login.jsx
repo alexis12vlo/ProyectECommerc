@@ -3,12 +3,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.scss'
 import { Button, Offcanvas, OffcanvasHeader, OffcanvasBody } from 'reactstrap';
 import { Outlet, Link } from "react-router-dom";
-
+import { auth } from '../firebase.js'
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    GoogleAuthProvider,
+    signInWithPopup,
+    sendPasswordResetEmail,
+} from "firebase/auth";
+import { FcGoogle } from "react-icons/fc";
 function Login({ correos, setCorreo }) {
     const correct = {
         border: 'solid 1px #84CEC2',
         opacyti: 0
-
     }
     const incorrect = {
         border: 'solid 1px #ff00004b',
@@ -23,7 +32,7 @@ function Login({ correos, setCorreo }) {
     const [stylePasword, setStylePasword] = useState(correct)
     const [styleCorreo, setStyleCorreo] = useState(correct)
     const [styleCorreoRegistrar, setStyleCorreoRegistrar] = useState(correct)
-
+    const googleProvider = new GoogleAuthProvider()
 
     function RegistrarEmail(e) {
         setRegistrarEmail(e.target.value);
@@ -52,31 +61,20 @@ function Login({ correos, setCorreo }) {
     function RegistrarContraseña(e) {
         setRegistrarContraseña(e.target.value);
     }
-    function RegistrarLogin() {
-
+    async function RegistrarLogin(e) {
+        e.preventDefault()
+        console.log("Submit");
+        try {
+            await createUserWithEmailAndPassword(auth, registraremail, registrarcontraseña)
+        } catch (error) {
+            console.log(error.message);
+        }
         var user = []
         console.log(registrarcontraseña, registraremail)
         correos.push({ email: registraremail, password: registrarcontraseña })
         setCorreo(correos)
         setOpen(false)
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     function EmailChange(e) {
 
@@ -97,6 +95,46 @@ function Login({ correos, setCorreo }) {
         setContraseña(e.target.value);
         setUser(correos.find(element => element.email == email));
     }
+    async function Submit(e) {
+        e.preventDefault()
+        console.log("Submit");
+        try {
+            await signInWithEmailAndPassword(auth, email, contraseña)
+            document.getElementById('LinkMenu').click();
+
+            console.log("Registro");
+        } catch (error) {
+            console.log(error.message);
+            if (error.message == 'Firebase: Error (auth/user-not-found).') {
+                setStylePasword(correct)
+                setStyleCorreo(incorrect)
+            }
+            if (error.message == 'Firebase: Error (auth/wrong-password).') {
+                setStyleCorreo(correct)
+
+                setStylePasword(incorrect)
+
+            }
+        }
+    }
+    async function RegistrarGoogle() {
+        try {
+            await signInWithPopup(auth, googleProvider)
+            const user = auth.currentUser;
+            console.log(user.auth.currentUser.displayName);
+
+            setOpen(false)
+            document.getElementById('LinkMenu').click();
+
+
+        }
+        catch {
+
+        }
+
+    }
+
+
     function BuscarLogin() {
         setCorreo(correos)
         if (correos.map((user) => user.email).includes(email)) {
@@ -161,25 +199,27 @@ function Login({ correos, setCorreo }) {
                                             <p className="RegistrarseTitle" >Registrate en Steady</p>
                                         </OffcanvasHeader>
                                         <OffcanvasBody>
-                                            <div className="LoginInputContainerInicioInputs Center">
-                                                <div className="LoginInputContainerInicioInputsCorreo">
-                                                    <h5>Ingresa tu Correo</h5>
+                                            <form onSubmit={RegistrarLogin} >
+                                                <div className="LoginInputContainerInicioInputs Center">
+                                                    <div className="LoginInputContainerInicioInputsCorreo">
+                                                        <h5>Ingresa tu Correo</h5>
 
-                                                    <input pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" onChange={RegistrarEmail} id='emailregistro' type="email" placeholder='Correo' pattern=".+@globex\.com" required />
-                                                    <p style={{ opacity: styleCorreoRegistrar.opacity }}>El correo debe incluir (@) y formato '.com'</p>
+                                                        <input pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" onChange={RegistrarEmail} id='emailregistro' type="email" placeholder='Correo' required />
+                                                        <p style={{ opacity: styleCorreoRegistrar.opacity }}>El correo debe incluir (@) y formato '.com'</p>
 
+                                                    </div>
+                                                    <div className="LoginInputContainerInicioInputsClave">
+                                                        <h5>Ingresa una Contraseña</h5>
+                                                        <input onChange={RegistrarContraseña} type="password" placeholder='Ingrese la Contraseña ' />
+                                                    </div>
+                                                    <div className="LoginInputContainerInicioButtumInicio Padding">
+                                                        <button type="submit" className="InicioButton">Registrarse</button>
+                                                    </div>
+                                                    <div className="LoginInputContainerInicioButtumInicio Padding">
+                                                        <button onClick={RegistrarGoogle} type="button" className="InicioButton"><FcGoogle className='Google' />Registrarse con Google</button>
+                                                    </div>
                                                 </div>
-                                                <div className="LoginInputContainerInicioInputsClave">
-                                                    <h5>Ingresa una Contraseña</h5>
-
-                                                    <input onChange={RegistrarContraseña} type="password" placeholder='Contraseña' />
-                                                    <h5>Repite la contraseña</h5>
-                                                    <input onChange={RegistrarContraseña} type="password" placeholder='Contraseña' />
-                                                </div>
-                                                <div className="LoginInputContainerInicioButtumInicio">
-                                                    <button onClick={RegistrarLogin} type="submit" className="InicioButton">Registrarse</button>
-                                                </div>
-                                            </div>
+                                            </form>
                                         </OffcanvasBody>
                                     </Offcanvas>
                                 </div>
@@ -192,22 +232,28 @@ function Login({ correos, setCorreo }) {
                                 </div>
                                 <div className="LoginInputContainerInicioBackLine"></div>
                             </div>
-                            <div className="LoginInputContainerInicioInputs">
-                                <div className="LoginInputContainerInicioInputsCorreo">
-                                    <input onFocus={EmailChange} style={{ border: styleCorreo.border }} onChange={EmailChange} id='emaill' type="email" placeholder='Correo' pattern=".+@globex\.com" required />
-                                    <p style={{ opacity: styleCorreo.opacity }}>Ingrese un Correo Valido</p>
-                                </div>
-                                <div className="LoginInputContainerInicioInputsClave">
-                                    <input onFocus={ContraseñaChange} style={{ border: stylePasword.border }} onChange={ContraseñaChange} type="password" placeholder='Contraseña' />
-                                    <p style={{ opacity: stylePasword.opacity }}>Contraseña invalida</p>
+                            <form className="Form" onSubmit={Submit}>
 
+                                <div className="LoginInputContainerInicioInputs">
+
+                                    <div className="LoginInputContainerInicioInputsCorreo">
+                                        <input onFocus={EmailChange} style={{ border: styleCorreo.border }} onChange={EmailChange} id='emaill' type="text" placeholder='Correo' required />
+                                        <p style={{ opacity: styleCorreo.opacity }}>Ingrese un Correo Valido</p>
+                                    </div>
+                                    <div className="LoginInputContainerInicioInputsClave">
+                                        <input id='password' onFocus={ContraseñaChange} style={{ border: stylePasword.border }} onChange={ContraseñaChange} type="password" placeholder='Contraseña' required />
+                                        <p style={{ opacity: stylePasword.opacity }}>Contraseña invalida</p>
+
+                                    </div>
                                 </div>
-                            </div>
-                            <Link id='LinkMenu' to="/menu"></Link>
-                            <div className="LoginInputContainerInicioButtumInicio">
-                                <button onClick={BuscarLogin} type="submit" className="InicioButton">Iniciar</button>
-                            </div>
+                                <Link id='LinkMenu' to="/menu"></Link>
+                                <div className="LoginInputContainerInicioButtumInicio">
+                                    <button type="submit" className="InicioButton">Iniciar</button>
+                                </div>
+                            </form>
+
                             <div className="LoginInputContainerInicioCrearCuenta">
+                                <h3 className="Registroo" >Si no tienes una cuenta Registrate</h3>
                                 <p onClick={function noRefCheck() { setOpen(true) }} >Registrarse</p>
                             </div>
                         </div>

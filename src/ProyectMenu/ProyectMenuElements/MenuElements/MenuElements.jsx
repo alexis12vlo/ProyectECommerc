@@ -20,11 +20,9 @@ const searchClient = algoliasearch(
     '63ad84ed366210b8d703e51cfcb70dbb'
 );
 
-function MenuElements({ total, setTotal, productocarrito, setProductoCarrito }) {
+function MenuElements({ setcategory, category, mostrarinfo, setMostrarInfo, productoInfo, setProductoInfo, total, setTotal, productocarrito, setProductoCarrito }) {
     const [categorias, setCategorias] = useState([{ value: 'electronics', nombre: "Electronica" }, { value: 'jewelery', nombre: "Joyeria" }, { value: "men's clothing", nombre: "Ropa de Hombre" }, { value: "women's clothing", nombre: "Ropa de Mujer" }])
     const [cardBusqueda, setCardBusqueda] = useState([])
-    const [category, setcategory] = useState('')
-
     const [cardBusquedaMap, setCardBusquedaMap] = useState([])
 
     function Hit(producto) {
@@ -39,14 +37,10 @@ function MenuElements({ total, setTotal, productocarrito, setProductoCarrito }) 
             </div>
         );
     }
-
-
-
-
     const Hits = ({ hits }) => (
         <div className="HitsContainer">
             {hits.map(hit => (
-                <MenuElementsCard key={hit.id} total={total} setTotal={setTotal} productocarrito={productocarrito} setProductoCarrito={setProductoCarrito} producto={hit} />
+                <MenuElementsCard productoInfo={productoInfo} setProductoInfo={setProductoInfo} mostrarinfo={mostrarinfo} setMostrarInfo={setMostrarInfo} key={hit.id} total={total} setTotal={setTotal} productocarrito={productocarrito} setProductoCarrito={setProductoCarrito} producto={hit} />
             ))}
         </div>
     );
@@ -71,6 +65,8 @@ function MenuElements({ total, setTotal, productocarrito, setProductoCarrito }) 
     }
 
     useEffect(() => {
+        setProductoCarrito(productocarrito);
+        setcategory(category);
         fetch(`https://fakestoreapi.com/products/`)
             .then(response => response.json())
             .then(data => {
@@ -111,8 +107,6 @@ function MenuElements({ total, setTotal, productocarrito, setProductoCarrito }) 
 
                                         placeholder: 'Buscar un Producto',
                                     }} />
-
-
                                 <button onClick={() => { setcategory('') }}>Todos</button>
                                 <button onClick={() => { setcategory("men's clothing") }}>Ropa de Hombre</button>
                                 <button onClick={() => { setcategory("women's clothing") }}>Ropa de Mujer</button>
